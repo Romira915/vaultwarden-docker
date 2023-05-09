@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    environment:
+      - WEBSOCKET_ENABLED="true" # Enable WebSocket notifications.
+      - DATABASE_URL=postgresql://vw:psql_pass@db/vaultwarden
+      - ADMIN_TOKEN=alwPngKxn9Qnl841M+7SB1luerJSnSsmfMOApC1/YZ2HVbztrzgoGGjkaCTczT2N
+    volumes:
+      - ./vw-data:/data
+    ports:
+      - 10080:80
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.0
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=psql_pass
+      - POSTGRES_USER=vw
+      - POSTGRES_DB=vaultwarden
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
